@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import pages.OrderPage;
 
 @RunWith(Parameterized.class)
 public class CheckOrderScooter {
@@ -28,11 +29,10 @@ public class CheckOrderScooter {
         this.metroStation = metroStation;
         this.phoneNumber = phoneNumber;
         this.date = date;
-        this.colourScooter =colourScooter;
+        this.colourScooter = colourScooter;
         this.comment = comment;
-
     }
-
+    public WebDriver driver;
     @Parameterized.Parameters
     public static Object[][] getButtonInfo() {
         return new Object[][]{
@@ -40,11 +40,10 @@ public class CheckOrderScooter {
                 {By.className("Button_Button__ra12g"), "Алёна", "Вавилоновна", "ул. Арбат, д.3, кв. 45", By.xpath("//button[@value='3']"), "81234567890", "04.03.23", By.xpath("//label[@class='Checkbox_Label__3wxSf' and @for='grey']"), "Хочу самокат"},
         };
     }
-
-    private WebDriver driver;
     @Before
     public void setup() {
         driver = WebDriverFactory.get();
+
     }
 
     @Test
@@ -52,21 +51,19 @@ public class CheckOrderScooter {
         WebElement element = driver.findElement(btnOrderScooter);
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element); //Находим элемент на странице.
         driver.findElement(btnOrderScooter).click();
-        driver.findElement(By.xpath("//input[@placeholder='* Имя']")).sendKeys(name); //Вводим данные
-        driver.findElement(By.xpath("//input[@placeholder='* Фамилия']")).sendKeys(lastName);
-        driver.findElement(By.xpath("//input[@placeholder='* Адрес: куда привезти заказ']")).sendKeys(street);
-        driver.findElement(By.xpath("//input[@placeholder='* Станция метро']")).click();
-        driver.findElement(metroStation).click();
-        driver.findElement(By.xpath("//input[@placeholder='* Телефон: на него позвонит курьер']")).sendKeys(phoneNumber);
-        driver.findElement(By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM']")).click();
-        driver.findElement(By.xpath("//input[@placeholder='* Когда привезти самокат']")).sendKeys(date);
-        driver.findElement(By.xpath("//span[@class='Dropdown-arrow']")).click();
-        driver.findElement(By.xpath("//div[@class='Dropdown-option' and text()='сутки']")).click();
-        driver.findElement(colourScooter).click();
-        driver.findElement(By.xpath("//input[@class='Input_Input__1iN_Z Input_Responsible__1jDKN']")).sendKeys(comment);
-        driver.findElement(By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM']")).click();
-        driver.findElement(By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Да']")).click();
-        driver.findElement(By.xpath("//div[@class='Order_ModalHeader__3FDaJ' and text()='Заказ оформлен']")).isEnabled();
+        OrderPage oPage = new OrderPage(driver);
+        oPage.inputNameText(name);
+        oPage.inputLastNameText(lastName);
+        oPage.inputAddressText(street);
+        oPage.inputMetroChoice(metroStation);
+        oPage.inputPhoneNumberText(phoneNumber);
+        oPage.btnNextPageChoice();
+        oPage.whenToBringAScooter(date);
+        oPage.timeOfOrderChoice();
+        oPage.selectColourScooterChoice(colourScooter);
+        oPage.commentForCourierText(comment);
+        oPage.fillingInputsFields();
+        oPage.checkContainerOrderIsReady();
     }
 
     @After
