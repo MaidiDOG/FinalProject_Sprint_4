@@ -5,9 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import pages.OrderPage;
 
 @RunWith(Parameterized.class)
@@ -48,10 +46,8 @@ public class CheckOrderScooter {
 
     @Test
     public void checkOrderScooterOnMainPage() {
-        WebElement element = driver.findElement(btnOrderScooter);
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element); //Находим элемент на странице.
-        driver.findElement(btnOrderScooter).click();
         OrderPage oPage = new OrderPage(driver);
+        oPage.findBtnOrderScooter(btnOrderScooter);
         oPage.inputNameText(name);
         oPage.inputLastNameText(lastName);
         oPage.inputAddressText(street);

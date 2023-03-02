@@ -1,7 +1,9 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class OrderPage {
     private WebDriver driver;
@@ -11,18 +13,21 @@ public class OrderPage {
     private final By inputAddress = By.xpath("//input[@placeholder='* Адрес: куда привезти заказ']");
     private final By inputMetro = By.xpath("//input[@placeholder='* Станция метро']");
     private final By inputPhoneNumber = By.xpath("//input[@placeholder='* Телефон: на него позвонит курьер']");
-    private final By selectedMetro = By.xpath("//button[@value='1']"); // Конкретное метро "Бульвар Рокоссовского"
     private final By btnNextPage = By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM']"); //Кнопка "Далее"
     private final By whenToBringAScooter = By.xpath("//input[@placeholder='* Когда привезти самокат']");
     private final By timeOfOrder = By.xpath("//span[@class='Dropdown-arrow']");
     private final By selectForDay = By.xpath("//div[@class='Dropdown-option' and text()='сутки']"); //Вариант выбора "сутки"
-    private final By selectColourScooter = By.xpath("//label[@class='Checkbox_Label__3wxSf' and @for='black']"); //Вариант выбора "Черный жемчуг"
     private final By commentForCourier = By.xpath("//input[@class='Input_Input__1iN_Z Input_Responsible__1jDKN']");
     private final By btnForOrder = By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM']"); //Кнопка "Заказать"
     private final By btnAcceptOrder = By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Да']"); // Кнопка принятия заказа (ни к чему не приводит в Chrome)
     private final By containerOrderIsReady = By.xpath("//div[@class='Order_ModalHeader__3FDaJ' and text()='Заказ оформлен']"); //Окно об успешном оформлении заказа
     public OrderPage(WebDriver driver) {
         this.driver = driver;
+    }
+    public void findBtnOrderScooter(By btnOrderScooter) {
+        WebElement element = driver.findElement(btnOrderScooter);
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element); //Находим элемент на странице.
+        driver.findElement(btnOrderScooter).click();
     }
     //Метод для ввода данных в форме
     public void inputNameText(String name) {
